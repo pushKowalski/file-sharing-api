@@ -14,7 +14,7 @@ export const filesTable = pgTable("files", {
   originalName: varchar("original_name").notNull(),
   storedName: varchar("stored_name").unique(),
   mimeType: varchar("mimetype").notNull(),
-  fileSize: bigint("file_size", { mode: number }).notNull(),
+  fileSize: bigint("file_size", { mode: "number" }).notNull(),
   shareCode: varchar("share_code", { length: 10 }).notNull().unique(),
 
   userId: uuid("user_id")

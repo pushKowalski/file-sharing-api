@@ -4,7 +4,7 @@ import { generateUniqueFilename } from "../utils/file.js";
 
 const uploadDir = process.env.UPLOAD_DIR || "./uploads";
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync("./uploads", { recursive: true });
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
@@ -59,6 +59,6 @@ export const multerErrorHandler = (err, req, res, next) => {
     error.statusCode = 400;
     return next(error);
   }
-  err.statusCode || 400;
+  err.statusCode = err.statusCode || 400;
   return next(err);
 };

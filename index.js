@@ -24,8 +24,8 @@ app.get("/health", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/file", fileRoutes);
 
-app.use(globalErrorHandler);
 app.use(notFoundError);
+app.use(globalErrorHandler);
 
 app.listen(PORT, () => {
   console.log(`💻💻 Server is up and running on port: ${PORT}`);

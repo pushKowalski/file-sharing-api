@@ -30,7 +30,7 @@ router.delete(
 );
 router.get("/my-files", requireLogin, FileController.myFiles);
 router.delete("/:fileId", requireLogin, FileController.deleteFile);
-router.get("/download/:shareCode", FileController.download);
+router.get("/d/:shareCode", FileController.download);
 router.get("/info/:shareCode", FileController.fileInfo);
 
 export default router;

@@ -35,8 +35,8 @@ export const requireRole = (roles) => {
         " or "
       )} can access this resource`;
       const err = new Error(message);
-      err.statusCode = 401;
-      next(err);
+      err.statusCode = 403;
+      return next(err);
     }
 
     next();

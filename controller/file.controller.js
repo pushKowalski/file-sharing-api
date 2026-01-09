@@ -10,7 +10,7 @@ export class FileController {
       const expiresInDaysNumber = expiresInDays ? Number(expiresInDays) : null;
 
       if (expiresInDays && Number.isNaN(expiresInDaysNumber)) {
-        const error = new Error("Invalid expiresInDays value");
+        const error = new Error("Invalid expiration value");
         error.statusCode = 400;
         throw error;
       }
@@ -90,7 +90,7 @@ export class FileController {
 
   static async myFiles(req, res, next) {
     try {
-      const userId = req.user?.id;
+      const userId = req.user.id;
 
       const files = await FileService.getMyFiles(userId);
 
@@ -113,6 +113,12 @@ export class FileController {
     try {
       const { fileId } = req.params;
       const userId = req.user.id;
+
+      if (!fileId) {
+        const error = new Error("File ID is required");
+        error.statusCode = 400;
+        throw error;
+      }
 
       await FileService.deleteFile(fileId, userId);
 

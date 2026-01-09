@@ -74,7 +74,7 @@ export class FileService {
     const filePath = path.join(process.env.UPLOAD_DIR, file.storedName);
 
     if (file.expiresAt && new Date(file.expiresAt) < new Date()) {
-      this.deleteFile(file.id);
+      await this.deleteFile(file.id);
       const err = new Error("File has expired");
       err.statusCode = 404;
       throw err;
@@ -106,8 +106,14 @@ export class FileService {
       .where(eq(filesTable.shareCode, shareCode))
       .limit(1);
 
+    if (!file) {
+      const err = new Error("File not found");
+      err.statusCode = 404;
+      throw err;
+    }
+
     if (file.expiresAt && new Date(file.expiresAt) < new Date()) {
-      this.deleteFile(file.id);
+      await this.deleteFile(file.id);
     }
 
     return file;
@@ -169,8 +175,8 @@ export class FileService {
 
     for (const file of expiredFiles) {
       try {
-        await deleteFileFromServer(file.storedName);
         await db.delete(filesTable).where(eq(filesTable.id, file.id));
+        await deleteFileFromServer(file.storedName);
         deletedCount++;
       } catch (err) {
         console.error("Unable to delete file:", err);

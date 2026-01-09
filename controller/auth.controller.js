@@ -1,4 +1,4 @@
-import { AuthServices } from "../services/auth.services.js";
+import { AuthServices } from "../services/auth.service.js";
 import {
   validateLoginInput,
   validateSignupInput,

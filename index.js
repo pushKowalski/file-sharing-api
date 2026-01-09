@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 
 import authRoutes from "./routes/auth.routes.js";
+import fileRoutes from "./routes/file.routes.js";
 import {
   notFoundError,
   globalErrorHandler,
@@ -21,6 +22,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/file", fileRoutes);
 
 app.use(globalErrorHandler);
 app.use(notFoundError);

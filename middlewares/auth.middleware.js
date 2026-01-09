@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { verifyToken } from "../utils/jwt.js";
 
 export const requireLogin = (req, res, next) => {

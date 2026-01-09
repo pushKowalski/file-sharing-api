@@ -6,14 +6,14 @@ import {
   bigint,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { usersTable } from "./user.model";
+import { usersTable } from "./user.model.js";
 
 export const filesTable = pgTable("files", {
   id: uuid().primaryKey().defaultRandom(),
 
   originalName: varchar("original_name").notNull(),
   storedName: varchar("stored_name").unique(),
-  mimeType: varchar("mimetype").notNull(),
+  mimeType: varchar("mime_type").notNull(),
   fileSize: bigint("file_size", { mode: "number" }).notNull(),
   shareCode: varchar("share_code", { length: 10 }).notNull().unique(),
 

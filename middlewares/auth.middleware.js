@@ -27,3 +27,18 @@ export const requireLogin = (req, res, next) => {
     next(err);
   }
 };
+
+export const requireRole = (roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user?.role)) {
+      const message = `You are not authorised. Only ${roles.join(
+        " or "
+      )} can access this resource`;
+      const err = new Error(message);
+      err.statusCode = 401;
+      next(err);
+    }
+
+    next();
+  };
+};

@@ -1,5 +1,5 @@
 import path from "path";
-import { desc, eq, sql, and } from "drizzle-orm";
+import { desc, eq, sql, and, lte } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { filesTable } from "../models/file.model.js";
 import {
@@ -145,5 +145,38 @@ export class FileService {
     await deleteFileFromServer(file.storedName);
 
     return file;
+  }
+
+  static async getAllFiles() {
+    const files = await db
+      .select()
+      .from(filesTable)
+      .orderBy(desc(filesTable.createdAt));
+
+    return files.map((file) => ({
+      ...file,
+      shareUrl: `${process.env.BASE_URL}/api/v1/download/${file.shareCode}`,
+    }));
+  }
+
+  static async deleteExpiredFiles() {
+    const expiredFiles = await db
+      .select()
+      .from(filesTable)
+      .where(lte(filesTable.expiresAt, new Date()));
+
+    let deletedCount = 0;
+
+    for (const file of expiredFiles) {
+      try {
+        await deleteFileFromServer(file.storedName);
+        await db.delete(filesTable).where(eq(filesTable.id, file.id));
+        deletedCount++;
+      } catch (err) {
+        console.error("Unable to delete file:", err);
+      }
+    }
+
+    return { deletedCount, timestamp: new Date().toISOString() };
   }
 }

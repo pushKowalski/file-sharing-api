@@ -124,4 +124,33 @@ export class FileController {
       next(err);
     }
   }
+
+  static async allFiles(req, res, next) {
+    try {
+      const allFiles = await FileService.getAllFiles();
+
+      res.status(200).json({
+        success: true,
+        count: allFiles.length,
+        data: allFiles,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async cleanupExpiredFiles(req, res, next) {
+    try {
+      const { deletedCount, timestamp } =
+        await FileService.deleteExpiredFiles();
+
+      res.status(200).json({
+        success: true,
+        message: `Cleaned up ${deletedCount} expired file(s)`,
+        timestamp,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }

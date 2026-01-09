@@ -1,6 +1,5 @@
 import express from "express";
-import { AuthController } from "../controller/auth.controller.js";
-import { requireLogin } from "../middlewares/auth.middleware.js";
+import { requireLogin, requireRole } from "../middlewares/auth.middleware.js";
 import {
   multerErrorHandler,
   upload,
@@ -17,9 +16,21 @@ router.post(
   FileController.upload
 );
 
-router.get("/download/:shareCode", FileController.download);
-router.get("/info/:shareCode", FileController.fileInfo);
+router.get(
+  "/all",
+  requireLogin,
+  requireRole(["admin", "moderator"]),
+  FileController.allFiles
+);
+router.delete(
+  "/admin/cleanup",
+  requireLogin,
+  requireRole(["admin"]),
+  FileController.cleanupExpiredFiles
+);
 router.get("/my-files", requireLogin, FileController.myFiles);
 router.delete("/:fileId", requireLogin, FileController.deleteFile);
+router.get("/download/:shareCode", FileController.download);
+router.get("/info/:shareCode", FileController.fileInfo);
 
 export default router;
